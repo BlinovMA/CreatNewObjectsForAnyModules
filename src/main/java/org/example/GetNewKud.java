@@ -13,7 +13,7 @@ public class GetNewKud {
     @Test
     public void shouldCreateKud() {
         // 1. получить токен Basic
-        String basicAuthToken = getBasicAuthToken();
+        String basicAuthToken = getBasicAuthTokenFromConfigJs();
         Assert.assertNotNull(basicAuthToken);
         // 2. получить токен OAuth
         ValidatableResponse responseWithToken = getResponseWithToken();
@@ -34,7 +34,7 @@ public class GetNewKud {
     }
 
 
-    public String getBasicAuthToken() {
+    public String getBasicAuthTokenFromConfigJs() {
         String response = given()
                 .when()
                 .get(" http://turbo4.apps.sodch.phoenixit.ru/js/config.js")
@@ -55,7 +55,7 @@ public class GetNewKud {
                 .queryParam("grant_type", "password")
                 .queryParam("username", "operalex")
                 .queryParam("password", "operalex")
-                .header("Authorization", getBasicAuthToken())
+                .header("Authorization", getBasicAuthTokenFromConfigJs())
                 .header("Connection", "keep-alive")
                 .when()
                 .post("http://turbo4.apps.sodch.phoenixit.ru/gateway/sso-service/oauth/token")

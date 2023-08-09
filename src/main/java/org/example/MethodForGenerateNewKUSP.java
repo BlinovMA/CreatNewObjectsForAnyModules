@@ -2,91 +2,18 @@ package org.example;
 
 import io.restassured.response.ValidatableResponse;
 import org.json.JSONObject;
-import org.testng.Assert;
-import org.testng.annotations.Test;
 
 import static io.restassured.RestAssured.given;
 
-public class AuthTest {
+public class MethodForGenerateNewKUSP {
 
-        public void shouldReceiveToken() {
-        String authToken = getBasicAuthToken();
-        Assert.assertNotNull(authToken);
-    }
-
-    @Test
-    public void shouldCreateKusp() {
-        // 1. получить токен Basic
-        String basicAuthToken = getBasicAuthToken();
-        Assert.assertNotNull(basicAuthToken);
-        // 2. получить токен OAuth
-        ValidatableResponse responseWithToken = getResponseWithToken(basicAuthToken);
-        Assert.assertNotNull(responseWithToken);
-
-        // 3. получить employee_id
-        String token = responseWithToken.extract().path("access_token");
-        Integer employeeId = responseWithToken.extract().path("employee_id");
-        System.out.println(token + "\n++++++++++++++++++++++++++++++++++" + employeeId + "\n++++++++++++++++++++++++++++++++++");
-
-        // 4. создать кусп
-        ValidatableResponse kuspResponse = createKusp(token);
-        kuspResponse.assertThat().statusCode(200);
-    }
-
-    public String getBasicAuthToken() {
-        String response = given()
-                .when()
-                .get(" http://turbo4.apps.sodch.phoenixit.ru/js/config.js")
-                .then()
-                .extract().body().asString();
-        System.out.println(response + "\n==========================");
-        int indexStart = response.indexOf("Basic");
-        int indexEnd = response.indexOf("==");
-        System.out.println(indexStart + " " + indexEnd);
-        String value = response.substring(indexStart, indexEnd + 2);
-        System.out.println(value + "\n==========================");
-        return value;
-    }
-
-    public ValidatableResponse getResponseWithToken(String basicAuthToken) {
-        return given()
-                .queryParam("grant_type", "password")
-                .queryParam("username", "operalex")
-                .queryParam("password", "operalex")
-                .queryParam("client_id", "client-external")
-                .queryParam("client_secret", "client-external")
-                .header("Authorization", basicAuthToken)
-                .header("Connection", "keep-alive")
-                .when()
-                .post("http://turbo4.apps.sodch.phoenixit.ru/gateway/sso-service/oauth/token")
-                .then()
-                .log().all()
-                .log().ifError();
-    }
-
-    public ValidatableResponse getEmployeeIdAndAccessToken(ValidatableResponse responseWithToken) {
-        String token = responseWithToken.extract().path("access_token");
-        String employeeId = responseWithToken.extract().path("employee_id");
-
-        return given()
-                .header("Authorization", "Bearer " + token)
-                .header("Connection", "keep-alive")
-                .when()
-                .get("http://turbo4.apps.sodch.phoenixit.ru/gateway/dictionary-service/api/v1/employee/" + employeeId)
-                .then()
-                .log().all()
-                .log().ifError();
-    }
-
-    public ValidatableResponse createKusp(String token) {
+    public static ValidatableResponse createKusp(String token) {
         int[] accidentHashtagIdsAray = new int[]{1};
         int[] accidentSpecialMarkIdsAray = new int[]{180001};
         ValidatableResponse responseGetDataKuspNumber =
                 given()
                         .header("Authorization", "Bearer " + token)
                         .header("Connection", "keep-alive")
-                      //  .queryParam("Content-Length", "958")
-                      //  .queryParam("Content-Type", "application/json")
                         .when()
                         .get("http://turbo4.apps.sodch.phoenixit.ru/gateway/incident-service/api/v1/kusp/sequence/KUSP_NUMBER")
                         .then()
@@ -139,7 +66,7 @@ public class AuthTest {
         bodyData.put("accidentPrimaryMemo", "24.09.2022 15:00 г. Москва, ул. Бориса Галушкина, д. 7, произошло Кража из квартиры. Заявитель: Воробьев Иван Михайлович 01.01.2000, г. Москва, ул. Бориса Галушкина, д. 7.");
         bodyData.put("accidentMemo", "");
         bodyData.put("complainantEmploymentForeign", false);
-        bodyData.put("accidentHashtagIds",accidentHashtagIdsAray);
+        bodyData.put("accidentHashtagIds", accidentHashtagIdsAray);
         bodyData.put("accidentSpecialMarkIds", accidentSpecialMarkIdsAray);
         bodyData.put("routeOriginType", "OPER_DUTY");
         bodyData.put("accidentAddressGaspsFias", "b741e447-56c5-46d9-b54a-e8b8521845c7");
@@ -161,7 +88,7 @@ public class AuthTest {
                         .log().all()
                         .post("http://turbo4.apps.sodch.phoenixit.ru/gateway/incident-service/api/v1/kusp")
                         .then()
-//                    .log().all()
+                        .log().all()
                         .log().ifError();
     }
 
