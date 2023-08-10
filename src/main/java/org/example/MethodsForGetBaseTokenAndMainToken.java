@@ -1,22 +1,23 @@
 package org.example;
 
 import io.restassured.response.ValidatableResponse;
+import utils.GetValueFromTurboPropertiesFile;
 
 import static io.restassured.RestAssured.given;
 
-public class MethodsForAuthorizationBaseTokenAndMainToken {
+public class MethodsForGetBaseTokenAndMainToken {
 
     public static String extractToken() {
         return responseWithToken.extract().path("access_token");
     }
 
-    static String basicAuthToken = MethodsForAuthorizationBaseTokenAndMainToken.getBasicAuthToken();
-    static ValidatableResponse responseWithToken = MethodsForAuthorizationBaseTokenAndMainToken.getResponseWithToken(basicAuthToken);
+    static String basicAuthToken = MethodsForGetBaseTokenAndMainToken.getBasicAuthToken();
+    public static ValidatableResponse responseWithToken = MethodsForGetBaseTokenAndMainToken.getResponseWithToken(basicAuthToken);
 
     public static String getBasicAuthToken() {
         String response = given()
                 .when()
-                .get(" http://turbo4.apps.sodch.phoenixit.ru/js/config.js")
+                .get(GetValueFromTurboPropertiesFile.baseURL+GetValueFromTurboPropertiesFile.baseTokenEndPoint)
                 .then()
                 .extract().body().asString();
         System.out.println(response + "\n==========================");
@@ -31,14 +32,14 @@ public class MethodsForAuthorizationBaseTokenAndMainToken {
     public static ValidatableResponse getResponseWithToken(String basicAuthToken) {
         return given()
                 .queryParam("grant_type", "password")
-                .queryParam("username", "operalex")
-                .queryParam("password", "operalex")
+                .queryParam("username", GetValueFromTurboPropertiesFile.ovdUserLogin)
+                .queryParam("password", GetValueFromTurboPropertiesFile.ovdPassword)
                 .queryParam("client_id", "client-external")
                 .queryParam("client_secret", "client-external")
                 .header("Authorization", basicAuthToken)
                 .header("Connection", "keep-alive")
                 .when()
-                .post("http://turbo4.apps.sodch.phoenixit.ru/gateway/sso-service/oauth/token")
+                .post(GetValueFromTurboPropertiesFile.baseURL+GetValueFromTurboPropertiesFile.mainTokenEndPoint)
                 .then()
                 .log().all()
                 .log().ifError();

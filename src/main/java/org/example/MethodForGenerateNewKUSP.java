@@ -2,6 +2,7 @@ package org.example;
 
 import io.restassured.response.ValidatableResponse;
 import org.json.JSONObject;
+import utils.GetValueFromTurboPropertiesFile;
 
 import static io.restassured.RestAssured.given;
 
@@ -15,7 +16,7 @@ public class MethodForGenerateNewKUSP {
                         .header("Authorization", "Bearer " + token)
                         .header("Connection", "keep-alive")
                         .when()
-                        .get("http://turbo4.apps.sodch.phoenixit.ru/gateway/incident-service/api/v1/kusp/sequence/KUSP_NUMBER")
+                        .get(GetValueFromTurboPropertiesFile.baseURL+"gateway/incident-service/api/v1/kusp/sequence/KUSP_NUMBER")
                         .then()
                         .log().all()
                         .log().ifError();
