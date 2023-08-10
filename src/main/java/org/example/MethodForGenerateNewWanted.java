@@ -2,9 +2,11 @@ package org.example;
 
 import io.restassured.response.ValidatableResponse;
 import org.json.JSONObject;
+import utils.GetValueFromTurboPropertiesFile;
 
 
 import static io.restassured.RestAssured.given;
+import static org.example.MethodsForGetBaseTokenAndMainToken.responseWithToken;
 
 public class MethodForGenerateNewWanted  {
 
@@ -15,7 +17,7 @@ public class MethodForGenerateNewWanted  {
                         .header("Authorization", "Bearer " + token)
                         .header("Connection", "keep-alive")
                         .when()
-                        .get("http://turbo2.apps.sodch.phoenixit.ru/gateway/wanted-service/api/v1/wanted/number")
+                        .get(GetValueFromTurboPropertiesFile.baseURL+"gateway/wanted-service/api/v1/wanted/number")
                         .then()
                         .log().all()
                         .log().ifError();
@@ -42,7 +44,7 @@ public class MethodForGenerateNewWanted  {
                         .body(bodyDataWanted.toString())
                         .when()
                         .log().all()
-                        .post("http://turbo2.apps.sodch.phoenixit.ru/gateway/wanted-service/api/v1/wanted")
+                        .post(GetValueFromTurboPropertiesFile.baseURL+"gateway/wanted-service/api/v1/wanted")
                         .then()
                         .log().all()
                         .log().ifError();

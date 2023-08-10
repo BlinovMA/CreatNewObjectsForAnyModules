@@ -2,7 +2,7 @@ import io.restassured.response.ValidatableResponse;
 import org.example.MethodForGenerateNewKud;
 import org.testng.annotations.Test;
 
-import static org.example.MethodsForAuthorizationBaseTokenAndMainToken.*;
+import static org.example.MethodsForGetBaseTokenAndMainToken.*;
 
 public class TestCreateKud {
 

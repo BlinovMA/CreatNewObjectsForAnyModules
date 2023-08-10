@@ -2,7 +2,7 @@ import io.restassured.response.ValidatableResponse;
 import org.example.MethodForGenerateNewKUSP;
 import org.testng.annotations.Test;
 
-import static org.example.MethodsForAuthorizationBaseTokenAndMainToken.extractToken;
+import static org.example.MethodsForGetBaseTokenAndMainToken.extractToken;
 
 public class TestCreateKUSP {
     @Test

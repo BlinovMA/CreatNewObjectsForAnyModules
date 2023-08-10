@@ -87,7 +87,7 @@ public class MethodForGenerateNewKUSP {
                         .body(bodyData.toString())
                         .when()
                         .log().all()
-                        .post("http://turbo4.apps.sodch.phoenixit.ru/gateway/incident-service/api/v1/kusp")
+                        .post(GetValueFromTurboPropertiesFile.baseURL+"gateway/incident-service/api/v1/kusp")
                         .then()
                         .log().all()
                         .log().ifError();

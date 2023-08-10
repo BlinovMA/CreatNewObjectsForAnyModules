@@ -16,14 +16,5 @@ public class GetValueFromTurboPropertiesFile {
     public String guvdUserLogin = propertyLoader.loadPropertiesFile("turbo.properties.properties").getProperty("guvd.user.login");
     public String guvdPassword = propertyLoader.loadPropertiesFile("turbo.properties.properties").getProperty("guvd.password");
 
-//    public String getovdUserLogin() {
-//
-//        return ovdUserLogin;
-//    }
-//
-//    public String getovdPassword() {
-//
-//        return ovdPassword;
-//    }
 
 }
