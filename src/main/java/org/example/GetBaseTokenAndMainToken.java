@@ -4,20 +4,22 @@ import io.restassured.response.ValidatableResponse;
 import utils.GetValueFromTurboPropertiesFile;
 
 import static io.restassured.RestAssured.given;
+import static utils.GetValueFromTurboPropertiesFile.baseTokenEndPoint;
+import static utils.GetValueFromTurboPropertiesFile.baseURL;
 
-public class MethodsForGetBaseTokenAndMainToken {
+public class GetBaseTokenAndMainToken {
 
     public static String extractToken() {
         return responseWithToken.extract().path("access_token");
     }
 
-    static String basicAuthToken = MethodsForGetBaseTokenAndMainToken.getBasicAuthToken();
-    public static ValidatableResponse responseWithToken = MethodsForGetBaseTokenAndMainToken.getResponseWithToken(basicAuthToken);
+    static String basicAuthToken = GetBaseTokenAndMainToken.getBasicAuthToken();
+    public static ValidatableResponse responseWithToken = GetBaseTokenAndMainToken.getResponseWithToken(basicAuthToken);
 
     public static String getBasicAuthToken() {
         String response = given()
                 .when()
-                .get(GetValueFromTurboPropertiesFile.baseURL+GetValueFromTurboPropertiesFile.baseTokenEndPoint)
+                .get(baseURL()+baseTokenEndPoint())
                 .then()
                 .extract().body().asString();
         System.out.println(response + "\n==========================");
@@ -39,7 +41,8 @@ public class MethodsForGetBaseTokenAndMainToken {
                 .header("Authorization", basicAuthToken)
                 .header("Connection", "keep-alive")
                 .when()
-                .post(GetValueFromTurboPropertiesFile.baseURL+GetValueFromTurboPropertiesFile.mainTokenEndPoint)
+                .log().all()
+                .post(baseURL()+GetValueFromTurboPropertiesFile.mainTokenEndPoint)
                 .then()
                 .log().all()
                 .log().ifError();

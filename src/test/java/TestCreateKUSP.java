@@ -1,13 +1,13 @@
 import io.restassured.response.ValidatableResponse;
-import org.example.MethodForGenerateNewKUSP;
+import org.example.KUSPRequests;
 import org.testng.annotations.Test;
 
-import static org.example.MethodsForGetBaseTokenAndMainToken.extractToken;
+import static org.example.GetBaseTokenAndMainToken.extractToken;
 
 public class TestCreateKUSP {
     @Test
     public void shouldCreateKusp() {
-        ValidatableResponse kuspResponse = MethodForGenerateNewKUSP.createKusp(extractToken());
+        ValidatableResponse kuspResponse = KUSPRequests.createKusp(extractToken());
         kuspResponse.assertThat().statusCode(200);
     }
 }

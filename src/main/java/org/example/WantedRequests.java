@@ -3,12 +3,11 @@ package org.example;
 import io.restassured.response.ValidatableResponse;
 import org.json.JSONObject;
 import utils.GetValueFromTurboPropertiesFile;
-
-
 import static io.restassured.RestAssured.given;
-import static org.example.MethodsForGetBaseTokenAndMainToken.responseWithToken;
+import static utils.GetValueFromTurboPropertiesFile.baseURL;
+import static utils.ServiceRequestEndpoints.wantedServiceGateawayEndpoint;
 
-public class MethodForGenerateNewWanted  {
+public class WantedRequests {
 
     public static ValidatableResponse createWanted(String token) {
 
@@ -17,13 +16,14 @@ public class MethodForGenerateNewWanted  {
                         .header("Authorization", "Bearer " + token)
                         .header("Connection", "keep-alive")
                         .when()
-                        .get(GetValueFromTurboPropertiesFile.baseURL+"gateway/wanted-service/api/v1/wanted/number")
+                        .log().all()
+                        .get(baseURL()+wantedServiceGateawayEndpoint()+"wanted/number")
                         .then()
                         .log().all()
                         .log().ifError();
 
         Integer WantedNumber = responseGetDataWantedNumber.extract().path("data");
-        System.out.println("data  " + WantedNumber);
+        //System.out.println("data  " + WantedNumber);
 
         JSONObject bodyDataWanted = new JSONObject();
 
@@ -41,10 +41,11 @@ public class MethodForGenerateNewWanted  {
                         .header("Authorization", "Bearer " + token)
                         .header("Connection", "keep-alive")
                         .header("Content-Type", "application/json")
+                        .log().all()
                         .body(bodyDataWanted.toString())
                         .when()
                         .log().all()
-                        .post(GetValueFromTurboPropertiesFile.baseURL+"gateway/wanted-service/api/v1/wanted")
+                        .post(baseURL() +wantedServiceGateawayEndpoint()+"wanted")
                         .then()
                         .log().all()
                         .log().ifError();

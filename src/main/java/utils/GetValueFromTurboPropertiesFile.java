@@ -2,10 +2,17 @@ package utils;
 
 public class GetValueFromTurboPropertiesFile {
 
-    static TurboPropertiesLoader propertyLoader = new TurboPropertiesLoader();
-    public static String baseURL = propertyLoader.loadPropertiesFile("turbo.properties.properties").getProperty("base.url");
-    public static String baseTokenEndPoint = propertyLoader.loadPropertiesFile("turbo.properties.properties").getProperty("base.auth.token.endpoint");
+    public static TurboPropertiesLoader propertyLoader = new TurboPropertiesLoader();
+    private static String baseURL = propertyLoader.loadPropertiesFile("turbo.properties.properties").getProperty("base.url");
+    private static String baseTokenEndPoint = propertyLoader.loadPropertiesFile("turbo.properties.properties").getProperty("base.auth.token.endpoint");
 
+    public static String baseURL() {
+        return baseURL;
+    }
+
+    public static String baseTokenEndPoint() {
+        return baseTokenEndPoint;
+    }
 
     public static String mainTokenEndPoint = propertyLoader.loadPropertiesFile("turbo.properties.properties").getProperty("main.auth.token.endpoint");
     public static String ovdUserLogin = propertyLoader.loadPropertiesFile("turbo.properties.properties").getProperty("ovd.user.login");

@@ -2,11 +2,12 @@ package org.example;
 
 import io.restassured.response.ValidatableResponse;
 import org.json.JSONObject;
-import utils.GetValueFromTurboPropertiesFile;
-
 import static io.restassured.RestAssured.given;
+import static utils.GetValueFromTurboPropertiesFile.baseURL;
+import static utils.ServiceRequestEndpoints.incidentServiceGateawayEndpoint;
 
-public class MethodForGenerateNewKUSP {
+
+public class KUSPRequests {
 
     public static ValidatableResponse createKusp(String token) {
         int[] accidentHashtagIdsAray = new int[]{1};
@@ -16,14 +17,14 @@ public class MethodForGenerateNewKUSP {
                         .header("Authorization", "Bearer " + token)
                         .header("Connection", "keep-alive")
                         .when()
-                        .get(GetValueFromTurboPropertiesFile.baseURL+"gateway/incident-service/api/v1/kusp/sequence/KUSP_NUMBER")
+                        .log().all()
+                        .get(baseURL() + incidentServiceGateawayEndpoint() + "kusp/sequence/KUSP_NUMBER")
                         .then()
                         .log().all()
                         .log().ifError();
 
         Integer kuspNumber = responseGetDataKuspNumber
                 .extract().path("data");
-        System.out.println("data  " + kuspNumber);
 
         JSONObject complainantAddress = new JSONObject();
         complainantAddress.put("guid", "b741e447-56c5-46d9-b54a-e8b8521845c7");
@@ -76,18 +77,16 @@ public class MethodForGenerateNewKUSP {
         //  bodyData.put("complainantEmploymentAddress", null);
         bodyData.put("accidentAddress", accidentAddress);
 
-        System.out.println(bodyData.toString(2));
 
         return
                 given()
                         .header("Authorization", "Bearer " + token)
                         .header("Connection", "keep-alive")
-
                         .header("Content-Type", "application/json")
                         .body(bodyData.toString())
                         .when()
                         .log().all()
-                        .post(GetValueFromTurboPropertiesFile.baseURL+"gateway/incident-service/api/v1/kusp")
+                        .post(baseURL() + incidentServiceGateawayEndpoint()+"kusp/")
                         .then()
                         .log().all()
                         .log().ifError();

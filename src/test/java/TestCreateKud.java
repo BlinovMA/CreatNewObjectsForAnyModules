@@ -1,17 +1,17 @@
 import io.restassured.response.ValidatableResponse;
-import org.example.MethodForGenerateNewKud;
+import org.example.KudRequests;
 import org.testng.annotations.Test;
 
-import static org.example.MethodsForGetBaseTokenAndMainToken.*;
+import static org.example.GetBaseTokenAndMainToken.*;
 
 public class TestCreateKud {
 
     @Test
     public void shouldCreateKud() {
 
-        ValidatableResponse responseOfGetEmployeeIDData = MethodForGenerateNewKud.getEmployeeIdWithAccessToken(responseWithToken);
+        ValidatableResponse responseOfGetEmployeeIDData = KudRequests.getEmployeeIdWithAccessToken(responseWithToken);
 
-        ValidatableResponse kudResponse = MethodForGenerateNewKud.createKud(extractToken(), responseOfGetEmployeeIDData);
+        ValidatableResponse kudResponse = KudRequests.createKud(extractToken(), responseOfGetEmployeeIDData);
 
         kudResponse.assertThat().statusCode(200);
     }
