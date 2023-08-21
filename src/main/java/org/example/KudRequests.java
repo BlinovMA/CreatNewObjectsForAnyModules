@@ -1,7 +1,11 @@
 package org.example;
 
+import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.response.ValidatableResponse;
+import io.restassured.specification.RequestSpecification;
 import org.json.JSONObject;
+
+import java.sql.Connection;
 
 import static io.restassured.RestAssured.given;
 import static utils.GetValueFromTurboPropertiesFile.baseURL;
@@ -9,6 +13,7 @@ import static utils.ServiceRequestEndpoints.dictionaryServiceGateawayEndpoint;
 import static utils.ServiceRequestEndpoints.kudServiceGateawayEndpoint;
 
 public class KudRequests {
+
     public static ValidatableResponse getEmployeeIdWithAccessToken(ValidatableResponse responseWithToken) {
 
         String token = responseWithToken.extract().path("access_token");
@@ -62,14 +67,22 @@ public class KudRequests {
                         .header("Connection", "keep-alive")
                         .header("Content-Type", "application/json")
                         .header("Accept-Encoding", "gzip, deflate")
+                        .spec(getRequestSpec())
                         .log().all()
                         .body(bodyDataKud.toString())
                         .when()
                         .log().all()
-                        .post(baseURL() + kudServiceGateawayEndpoint() + "kud/")
+                        .post( "kud/")
                         .then()
                         .log().all()
                         .log().ifError();
+    }
+
+    private static RequestSpecification getRequestSpec(){
+        RequestSpecification requestSpec = new RequestSpecBuilder()
+                .setBaseUri(baseURL() + kudServiceGateawayEndpoint())
+                .build();
+        return requestSpec;
     }
 }
 
